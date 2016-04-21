@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+    <start/>
+    <navigate-and-click param="Create New Project" />
+    <wait-dialog-command param="New Project"/>
+    <select-in-list param="Java" />
+    <navigate-and-click param="New..." />
+
+    <select-in-JDK-list param="JDK" />
+    <wait-dialog-command param="Select Home Directory for JDK"/>
+    <type-text-in-text-field type-text="/Library/Java/JavaVirtualMachines/jdk1.8.0_71.jdk/Contents/Home"/>
+
+    <wait delay="1000"/>
+    <navigate-and-click param="OK" />
+
+    <wait delay="500"/>
+    <navigate-and-click param="Next" />
+
+    <wait-ui param="Create project from template"/>
+    <navigate-and-click param="Next" />
+
+    <wait-ui param="Project name:"/>
+    <type-text-in-text-field location="Project name:" type-text="$PROJECT_NAME"/>
+
+    <wait delay="1000"/>
+    <navigate-and-click param="Finish" />
+
+    <wait-project-open/>
+    <print>Idea is ready</print>
+</root>

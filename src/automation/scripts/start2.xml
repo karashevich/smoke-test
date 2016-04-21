@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+    <start/>
+    <navigate-and-click param="Create New Project" />
+    <wait-dialog-command param="New Project"/>
+    <select-in-list param="Java" />
+    <select-framework param="facet:jpa"/>
+
+    <wait delay="500"/>
+    <navigate-and-click param="Next" />
+
+    <wait-ui param="Project name:"/>
+    <type-text-in-text-field location="Project name:" type-text="$PROJECT_NAME"/>
+
+    <wait delay="1000"/>
+    <navigate-and-click param="Finish" />
+
+    <wait-project-open/>
+    <print>Idea is ready</print>
+</root>

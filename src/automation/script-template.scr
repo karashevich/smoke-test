@@ -1,0 +1,8 @@
+//wait for IDEA has been loaded
+
+navigateAndClick("Create New Project");
+screenshot()
+waitDialog("New Project");
+navigateAndClickByText("Next");
+checkUI("Create project from _template");
+navigateAndClickByText("Next");

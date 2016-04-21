@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+    <start/>
+    <navigate-and-click param="Next Tip" />
+    <navigate-and-click param="Close"/>
+
+    <wait delay="1000"/>
+    <!--<navigate-and-click param="$PROJECT_NAME"/>-->
+
+
+    <print>Closed Tip of the day</print>
+</root>

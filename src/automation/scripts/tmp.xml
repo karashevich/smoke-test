@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+    <start/>
+    <navigate-and-click-menu param="Tools->WebServices"/>
+    <print>Closed Tip of the day</print>
+</root>

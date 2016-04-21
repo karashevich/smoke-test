@@ -1,0 +1,57 @@
+<idea-plugin version="2">
+  <id>smoke-test</id>
+  <name>Smoke Test Plugin</name>
+  <version>0.0.1</version>
+  <vendor email="sergey.karashevich@jetbrains.com" url="jetbrains.com">YourCompany</vendor>
+
+  <description><![CDATA[
+      JetBrains plugin for automation of smoke tests.<br>
+      <em>most HTML tags may be used</em>
+    ]]></description>
+
+  <change-notes><![CDATA[
+      Add change notes here.<br>
+      <em>most HTML tags may be used</em>
+    ]]>
+  </change-notes>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="146"/>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <!-- uncomment to enable plugin in all products
+  <depends>com.intellij.modules.lang</depends>
+  -->
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+    <applicationService
+            serviceInterface="automation.RobotControlManager"
+            serviceImplementation="automation.RobotControlManager">
+    </applicationService>
+  </extensions>
+
+  <application-components>
+    <component>
+      <implementation-class>automation.RobotControlComponent</implementation-class>
+    </component>
+  </application-components>
+
+  <actions>
+    <!-- Add your actions here -->
+    <action id="processScriptAction" class="automation.actions.ProcessScriptAction" text="Process Script Action"
+            description="Process Script Action">
+      <keyboard-shortcut keymap="$default" first-keystroke="ctrl meta alt C"/>
+    </action>
+    <action id="updateScripts" class="automation.actions.UpdateScripts" text="Update Scripts"
+            description="Update list of scripts">
+      <keyboard-shortcut keymap="$default" first-keystroke="ctrl meta alt U"/>
+    </action>
+    <action id="idleAction" class="automation.actions.IdleAction" text="Idle Action"
+            description="Idle aciton to invoke breakpoint for example">
+      <keyboard-shortcut keymap="$default" first-keystroke="ctrl meta alt I"/>
+    </action>
+  </actions>
+
+</idea-plugin>
