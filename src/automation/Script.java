@@ -76,6 +76,9 @@ public class Script extends AnAction {
                 case "select-in-JDK-list":
                     command = new SelectInJdkListCommand(getParam(element));
                     break;
+                case "show-tool-windows":
+                    command = new ShowToolWindowsCommand();
+                    break;
                 case "type-text-in-text-field":
                     command = new TypeInTextFieldCommand(getTypedText(element));
                     break;
@@ -90,6 +93,9 @@ public class Script extends AnAction {
                     break;
                 case "wait-project-open":
                     command = new WaitProjectOpeningCommand(new Parameters());
+                    break;
+                case "park-mouse":
+                    command = new ParkMouseCommand(element);
                     break;
                 case "print":
                     command = getPrintCommand(element);

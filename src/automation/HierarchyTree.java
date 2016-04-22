@@ -17,7 +17,13 @@ package automation;
 
 import a.b.T;
 import com.intellij.ide.navigationToolbar.NavBarItem;
+import com.intellij.ide.projectView.impl.ProjectViewPane;
+import com.intellij.ide.projectView.impl.ProjectViewTree;
+import com.intellij.ide.util.newProjectWizard.FrameworkSupportNode;
+import com.intellij.ide.util.newProjectWizard.FrameworkSupportNodeBase;
+import com.intellij.ide.util.newProjectWizard.FrameworksTree;
 import com.intellij.internal.inspector.UiInspectorAction;
+import com.intellij.ui.CheckboxTreeBase;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
@@ -45,6 +51,7 @@ import java.util.Vector;
  * Created by Sergey Karashevich on 26/01/16.
  */
 public class HierarchyTree extends JTree implements TreeSelectionListener {
+
   final Component myComponent;
 
   private HierarchyTree(Component c) {
@@ -88,6 +95,8 @@ public class HierarchyTree extends JTree implements TreeSelectionListener {
         return component;
       if ((component instanceof NavBarItem) && (((NavBarItem)component).getText())!=null && ((NavBarItem)component).getText().equals(s))
         return component;
+      if((component instanceof JToggleButton) && (((JToggleButton)component).getText() !=null) && (((JToggleButton)component).getText().equals(s)))
+        return component;
       else {
         if (startNode.getChildCount() > 0) {
           for (int i = 0; i < startNode.getChildCount(); i++) {
@@ -107,7 +116,7 @@ public class HierarchyTree extends JTree implements TreeSelectionListener {
   public static Component findComponentsByTextAndType(@NotNull String text, Class<? extends Component> clazz, ComponentNode root) {
     if (root == null) return null;
     Component component = root.getComponent();
-    if (component != null && component.isVisible() && (component.isShowing() || component instanceof ProjectViewElement)) {
+    if (component != null && component.isVisible() && (component.isShowing() || component instanceof ProjectViewElement || component instanceof FrameworkSupportElement)) {
       if (clazz.isInstance(component) && getTextForced(component) != null && getTextForced(component).equals(text))
         return component;
       else {
@@ -260,17 +269,25 @@ public class HierarchyTree extends JTree implements TreeSelectionListener {
           result.add(new ComponentNode(component));
           if (component instanceof Tree) {
             final Tree tree = (Tree)component;
-            final TreeUI treeUi = tree.getUI();
-            final int rowCount = treeUi.getRowCount(tree);
+            final int rowCount = tree.getRowCount();
             for (int i = 0; i < rowCount; i++) {
-              final TreePath treePath = treeUi.getPathForRow(tree, i);
-              final Rectangle rowBounds = treeUi.getPathBounds(tree, treePath);
+              final TreePath treePath = tree.getPathForRow(i);
+              final Rectangle rowBounds = tree.getPathBounds(treePath);
               final DefaultMutableTreeNode node = (DefaultMutableTreeNode)treePath.getPathComponent(1);
-              final String cmpText = treePath.getLastPathComponent().toString();
-              ProjectViewElement projectViewElement = new ProjectViewElement(tree, node.getClass(), cmpText);
-              projectViewElement.setBounds(rowBounds);
-              projectViewElement.setVisible(true);
-              result.add(new ComponentNode(projectViewElement));
+              if (component instanceof ProjectViewTree) {
+                  final String cmpText = treePath.getLastPathComponent().toString();
+                  ProjectViewElement projectViewElement = new ProjectViewElement(tree, node.getClass(), cmpText);
+                  projectViewElement.setBounds(rowBounds);
+                  projectViewElement.setVisible(true);
+                  result.add(new ComponentNode(projectViewElement));
+              } else if (component instanceof FrameworksTree) {
+                FrameworksTree fTree = (FrameworksTree) component;
+                final FrameworkSupportNodeBase fsnb = (FrameworkSupportNodeBase) node;
+                FrameworkSupportElement frameworkSupportElement = new FrameworkSupportElement(tree, node.getClass(), fsnb.getId(), fsnb instanceof FrameworkSupportNode, fTree);
+                frameworkSupportElement.setBounds(rowBounds);
+                frameworkSupportElement.setVisible(true);
+                result.add(new ComponentNode(frameworkSupportElement));
+              }
             }
           }
         }
@@ -309,6 +326,61 @@ public class HierarchyTree extends JTree implements TreeSelectionListener {
     @Override
     public Container getParent() {
       return myTree;
+    }
+  }
+
+  public static class FrameworkSupportElement extends JLabel{
+    Tree myTree;
+    Class myOriginalClass;
+    String myText;
+    boolean myHasCheckbox;
+    FrameworksTree myFrameworksTree;
+
+    public FrameworkSupportElement(Tree tree, Class originalClass, String text, boolean hasCheckbox, FrameworksTree frameworksTree){
+      super(text);
+      myText = text;
+      myTree = tree;
+      myOriginalClass = originalClass;
+      myHasCheckbox = hasCheckbox;
+      myFrameworksTree = frameworksTree;
+    }
+
+    @Nullable
+    public JCheckBox getCheckbox(){
+      if (!myHasCheckbox) return null;
+      KCheckBox checkBox = new KCheckBox(this);
+      final Rectangle checkboxBounds = ((CheckboxTreeBase.CheckboxTreeCellRendererBase)myFrameworksTree.getCellRenderer()).myCheckbox.getBounds();
+      checkBox.setBounds(checkboxBounds);
+      checkBox.setVisible(true);
+      return checkBox;
+    }
+
+
+    @Override
+    public Point getLocationOnScreen() {
+      final Point parentLocationOnscreen = getParent().getLocationOnScreen();
+      final Point result = new Point(parentLocationOnscreen.x + getBounds().x, parentLocationOnscreen.y + getBounds().y);
+      return result;
+    }
+
+    @Override
+    public Container getParent() {
+      return myTree;
+    }
+  }
+
+  public static class KCheckBox extends JCheckBox{
+
+    Component parent;
+
+    public KCheckBox(Component parent) {
+      super();
+      this.parent = parent;
+    }
+
+    @Override
+    public Point getLocationOnScreen() {
+      return parent.getLocationOnScreen();
     }
   }
 }

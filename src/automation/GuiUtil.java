@@ -60,9 +60,11 @@ public class GuiUtil {
    * @param startComponent - a component from which will be built hierarchy tree
    * @return
    */
-  public static Component findComponentByText(String s, Component startComponent){
+  public static Component findComponentByText(String s, Component startComponent) throws Exception {
     TreeModel tree = getTree(startComponent);
-    return HierarchyTree.findComponentByText(s, (HierarchyTree.ComponentNode)tree.getRoot());
+    final Component componentByText = HierarchyTree.findComponentByText(s, (HierarchyTree.ComponentNode) tree.getRoot());
+    if (componentByText == null) throw new Exception("Unable to find component by text: \"" + s + "\"");
+    return componentByText;
   }
 
   public static Component findComponentByTextAndType(String text, Class<? extends Component> clazz, Component startComponent){

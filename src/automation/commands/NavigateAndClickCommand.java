@@ -20,6 +20,7 @@ import automation.RobotControlManager;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.containers.Queue;
 
+import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -37,9 +38,10 @@ public class NavigateAndClickCommand extends Command {
     @Override
     public void process(final Queue<Command> script) throws Exception {
         myParameters.log();
+        final Component componentByText = GuiUtil.findComponentByText(myParameters.getTextField(),
+                IdeFocusManager.getGlobalInstance().getFocusOwner());
         RobotControlManager.getInstance().getRobotControl().
-                navigateAndClick(GuiUtil.findComponentByText(myParameters.getTextField(),
-                        IdeFocusManager.getGlobalInstance().getFocusOwner()),
+                navigateAndClick(componentByText,
                         new Runnable() {
                             @Override
                             public void run() {

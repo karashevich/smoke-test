@@ -16,5 +16,20 @@
     <navigate-and-click param="Finish" />
 
     <wait-project-open/>
-    <print>Idea is ready</print>
+    <print>Idea opened</print>
+
+    <navigate-and-click param="Next Tip" />
+    <navigate-and-click param="Close"/>
+    <print>Closed Tip of The Day</print>
+
+    <wait delay="1000"/>
+    <!--<project-view element="src" action="left-click"/>-->
+    <show-tool-windows/>
+    <park-mouse position="center"/>
+
+    <wait delay="1000"/>
+    <navigate-and-click param="Persistence"/>
+
+    <wait delay="1000"/>
+    <navigate-and-click param="Java Enterprise"/>
 </root>
