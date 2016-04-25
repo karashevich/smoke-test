@@ -34,7 +34,7 @@ public class ShowToolWindowsCommand extends Command {
                 if (component instanceof StatusBarWidget) {
                     StatusBarWidget statusBarWidget = (StatusBarWidget) component;
                     if (statusBarWidget.ID().equals("ToolWindows Widget"))
-                        rc.navigateAndClick(component, runnext(script));
+                        rc.navigateAndClick(component, runNext(script));
                     return;
                 }
             }
@@ -42,18 +42,5 @@ public class ShowToolWindowsCommand extends Command {
         } else {
             startNext(script);
         }
-    }
-
-    private Runnable runnext(Queue<Command> script){
-        return new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    startNext(script);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
     }
 }

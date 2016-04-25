@@ -76,7 +76,7 @@ public class Parameters {
     this.myTypedText = typedText;
   }
 
-  void log(){
+  public void log(){
     System.out.println("    " + (new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS")).format(new Date()) + "----PARAMETERS: " + toString());
   }
 

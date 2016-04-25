@@ -16,6 +16,8 @@
 package automation.commands;
 
 import com.intellij.util.containers.Queue;
+import com.intellij.util.ui.EdtInvocationManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,4 +37,23 @@ public abstract class Command {
   }
 
   public abstract void process(Queue<Command> script) throws Exception;
+
+  @NotNull
+  protected Runnable runNext(final Queue<Command> script) {
+    return new Runnable() {
+      @Override
+      public void run() {
+        EdtInvocationManager.getInstance().invokeLater(new Runnable() {
+          @Override
+          public void run() {
+            try {
+              startNext(script);
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
+          }
+        });
+      }
+    };
+  }
 }

@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package automation.commands;
+package automation.commands.wait;
 
 import automation.RobotControlManager;
+import automation.commands.Command;
+import automation.commands.Parameters;
 import com.intellij.util.containers.Queue;
 import com.intellij.util.ui.EdtInvocationManager;
 
@@ -27,7 +29,7 @@ import java.util.Date;
  */
 public class WaitUiCommand extends Command {
 
-  Parameters myParameters;
+  private Parameters myParameters;
 
   public WaitUiCommand(Parameters parameters) {
     myParameters = parameters;
@@ -39,18 +41,7 @@ public class WaitUiCommand extends Command {
     RobotControlManager.getInstance().getRobotControl().waitUi(myParameters.getTextField(), new Runnable() {
       @Override
       public void run() {
-        EdtInvocationManager.getInstance().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            try {
-              startNext(script);
-            }
-            catch (Exception e) {
-              e.printStackTrace();
-              System.exit(1);
-            }
-          }
-        });
+        EdtInvocationManager.getInstance().invokeLater(runNext(script));
       }
     }, myParameters.getMyTimeout());
   }

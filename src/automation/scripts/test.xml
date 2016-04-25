@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+    <start/>
+    <!--<navigate-and-click-menu param="Tools->WebServices"/>\-->
+    <project-model-check path="src/META-INF/persistence.xml"/>
+    <project-model-check path="lib/javax.persistence.jar!/javax/persistence"/>
+    <print>Expanded</print>
+</root>

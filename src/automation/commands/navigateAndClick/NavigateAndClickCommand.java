@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package automation.commands;
+package automation.commands.navigateAndClick;
 
 import automation.GuiUtil;
 import automation.RobotControlManager;
+import automation.commands.Command;
+import automation.commands.Parameters;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.containers.Queue;
 
@@ -41,17 +43,7 @@ public class NavigateAndClickCommand extends Command {
         final Component componentByText = GuiUtil.findComponentByText(myParameters.getTextField(),
                 IdeFocusManager.getGlobalInstance().getFocusOwner());
         RobotControlManager.getInstance().getRobotControl().
-                navigateAndClick(componentByText,
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    startNext(script);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
+                navigateAndClick(componentByText, runNext(script));
     }
 
 }

@@ -13,30 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package automation.commands;
+package automation.commands.wait;
 
 import automation.RobotControlManager;
+import automation.commands.Command;
+import automation.commands.Parameters;
 import com.intellij.util.containers.Queue;
 import com.intellij.util.ui.EdtInvocationManager;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by Sergey Karashevich on 29/01/16.
  */
-public class WaitDialogCommand extends Command{
+public class WaitCommand extends Command {
 
   Parameters myParameters;
 
-  public WaitDialogCommand(Parameters parameters) {
+  public WaitCommand(Parameters parameters) {
     myParameters = parameters;
   }
 
   @Override
   public void process(final Queue<Command> script) throws Exception {
     myParameters.log();
-    RobotControlManager.getInstance().getRobotControl().runInRobotThreadWhenDialogIsShown(new Runnable() {
+    RobotControlManager.getInstance().getRobotControl().waitSome(myParameters.getMyTimeout(), new Runnable() {
       @Override
       public void run() {
         EdtInvocationManager.getInstance().invokeLater(new Runnable() {
@@ -47,11 +46,11 @@ public class WaitDialogCommand extends Command{
             }
             catch (Exception e) {
               e.printStackTrace();
+              System.exit(1);
             }
           }
         });
       }
-    }, myParameters.getTextField(), myParameters.getMyTimeout());
+    });
   }
-
 }

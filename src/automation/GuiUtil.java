@@ -16,6 +16,7 @@
 package automation;
 
 
+import com.intellij.ide.projectView.impl.ProjectViewTree;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.ui.tree.TreeUtil;
 import org.jetbrains.annotations.NotNull;
@@ -32,82 +33,92 @@ import java.util.ArrayList;
 public class GuiUtil {
 
 
-  public TreeModel getFocusedTree(){
-    return getTree(IdeFocusManager.getGlobalInstance().getFocusOwner());
-  }
-
-
-  /**
-   * Build a TreeModel (hierarchical structure of components) for a pane with component c
-   *
-   * @param c - any component of a building tree
-   * @return
-   */
-  public static TreeModel getTree(Component c){
-    Component parent = c.getParent();
-    while (parent != null) {
-      c = parent;
-      parent = c.getParent();//Find root window
+    public TreeModel getFocusedTree() {
+        return getTree(IdeFocusManager.getGlobalInstance().getFocusOwner());
     }
-    return new DefaultTreeModel(new HierarchyTree.ComponentNode(c));
-  }
 
-  /**
-   *
-   * Find startComponent of hierarchy tree which have a text field equaled to String s
-   *
-   * @param s - textField for a searchable startComponent
-   * @param startComponent - a component from which will be built hierarchy tree
-   * @return
-   */
-  public static Component findComponentByText(String s, Component startComponent) throws Exception {
-    TreeModel tree = getTree(startComponent);
-    final Component componentByText = HierarchyTree.findComponentByText(s, (HierarchyTree.ComponentNode) tree.getRoot());
-    if (componentByText == null) throw new Exception("Unable to find component by text: \"" + s + "\"");
-    return componentByText;
-  }
 
-  public static Component findComponentByTextAndType(String text, Class<? extends Component> clazz, Component startComponent){
-    TreeModel tree = getTree(startComponent);
-    return HierarchyTree.findComponentsByTextAndType(text, clazz, (HierarchyTree.ComponentNode)tree.getRoot());
-  }
-
-  public static ArrayList<Component> findComponentsByType(Class<? extends Component> clazz, Component startComponent){
-    TreeModel tree = getTree(startComponent);
-    return HierarchyTree.findComponentsByType(clazz, (HierarchyTree.ComponentNode)tree.getRoot());
-  }
-
-  /**
-   * Checks that hierarchy tree contains or not ActionLink, JButton, JBButton, JLabel, JBLabel, JBCheckBox with the finding text
-   *
-   * @param s - finding text
-   * @return true if hierarchy tree built for Component startComponent contains component with textField s
-   */
-  public static boolean checkTextСomponent(String s, Component startComponent){
-    TreeModel tree = getTree(startComponent);
-    return HierarchyTree.findComponentByText(s, (HierarchyTree.ComponentNode)tree.getRoot()) != null;
-  }
-
-  public static TreeNode traverse(@NotNull final TreeNode node, Acceptor acceptor) {
-    final int childCount = node.getChildCount();
-    for (int i = 0; i < childCount; i++){
-      final TreeNode result = traverse(node.getChildAt(i), acceptor);
-      if (result != null) return result;
+    /**
+     * Build a TreeModel (hierarchical structure of components) for a pane with component c
+     *
+     * @param c - any component of a building tree
+     * @return
+     */
+    public static TreeModel getTree(Component c) {
+        Component parent = c.getParent();
+        while (parent != null) {
+            c = parent;
+            parent = c.getParent();//Find root window
+        }
+        return new DefaultTreeModel(new HierarchyTree.ComponentNode(c));
     }
-    if (acceptor.accept(node)) return node;
-    else return null;
-  }
 
-  interface Acceptor{
-    boolean accept(TreeNode treeNode);
-  }
+    /**
+     * Find startComponent of hierarchy tree which have a text field equaled to String s
+     *
+     * @param s              - textField for a searchable startComponent
+     * @param startComponent - a component from which will be built hierarchy tree
+     * @return
+     */
+    public static Component findComponentByText(String s, Component startComponent) throws Exception {
+        TreeModel tree = getTree(startComponent);
+        final Component componentByText = HierarchyTree.findComponentByText(s, (HierarchyTree.ComponentNode) tree.getRoot());
+        if (componentByText == null) throw new Exception("Unable to find component by text: \"" + s + "\"");
+        return componentByText;
+    }
 
-  /**
-   * Use for debug only
-   */
-  //public String[] getAllTextFromComponents(){
-  //  TreeModel tree = getFocusedTree();
-  //  ArrayList<String> result = new ArrayList<String>(10);
-  //
-  //}
+    public static Component findComponentByTextAndType(String text, Class<? extends Component> clazz, Component startComponent) {
+        TreeModel tree = getTree(startComponent);
+        return HierarchyTree.findComponentsByTextAndType(text, clazz, (HierarchyTree.ComponentNode) tree.getRoot());
+    }
+
+    public static ArrayList<Component> findComponentsByType(Class<? extends Component> clazz, Component startComponent) {
+        TreeModel tree = getTree(startComponent);
+        return HierarchyTree.findComponentsByType(clazz, (HierarchyTree.ComponentNode) tree.getRoot());
+    }
+
+    public static ProjectViewTree getProjectViewTree(Component startComponent) throws Exception{
+        final ArrayList<Component> componentsByType = GuiUtil.findComponentsByType(ProjectViewTree.class, startComponent);
+        if (componentsByType == null || componentsByType.isEmpty()) throw new Exception("Unable to find project tree");
+        if (componentsByType.size() > 1) throw new Exception("Was found more than one project tree");
+        final Component component = componentsByType.get(0);
+        return (ProjectViewTree) component;
+    }
+
+    /**
+     * Checks that hierarchy tree contains or not ActionLink, JButton, JBButton, JLabel, JBLabel, JBCheckBox with the finding text
+     *
+     * @param s - finding text
+     * @return true if hierarchy tree built for Component startComponent contains component with textField s
+     */
+    public static boolean checkTextСomponent(String s, Component startComponent) {
+        TreeModel tree = getTree(startComponent);
+        return HierarchyTree.findComponentByText(s, (HierarchyTree.ComponentNode) tree.getRoot()) != null;
+    }
+
+    public static TreeNode traverse(@NotNull final TreeNode node, Acceptor acceptor) {
+        final int childCount = node.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            final TreeNode result = traverse(node.getChildAt(i), acceptor);
+            if (result != null) return result;
+        }
+        if (acceptor.accept(node)) return node;
+        else return null;
+    }
+
+    interface Acceptor {
+        boolean accept(TreeNode treeNode);
+    }
+
+
+
+
+    /**
+     * Use for debug only
+     */
+    //public String[] getAllTextFromComponents(){
+    //  TreeModel tree = getFocusedTree();
+    //  ArrayList<String> result = new ArrayList<String>(10);
+    //
+    //}
 }

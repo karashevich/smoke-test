@@ -1,9 +1,11 @@
-package automation.commands;
+package automation.commands.select;
 
 import automation.GuiUtil;
 import automation.HierarchyTree;
 import automation.RobotControl;
 import automation.RobotControlManager;
+import automation.commands.Command;
+import automation.commands.Parameters;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.containers.Queue;
 import org.jetbrains.annotations.NotNull;
@@ -29,20 +31,7 @@ public class SelectInFrameworkListCommand extends Command {
 //        rc.navigateAndClick(rc.findFrameworkCheckbox(myParameters.getTextField()), runnext(script));
         final HierarchyTree.FrameworkSupportElement componentByText = (HierarchyTree.FrameworkSupportElement) GuiUtil.findComponentByTextAndType(myParameters.getTextField(), HierarchyTree.FrameworkSupportElement.class, focusOwner);
         final JCheckBox checkbox = componentByText.getCheckbox();
-        rc.navigateAndClick(checkbox, runnext(script));
+        rc.navigateAndClick(checkbox, runNext(script));
     }
 
-    @NotNull
-    private Runnable runnext(final Queue<Command> script) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    startNext(script);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-    }
 }

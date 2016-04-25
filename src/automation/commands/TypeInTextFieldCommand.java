@@ -27,41 +27,35 @@ import java.util.Date;
  * Created by Sergey Karashevich on 29/01/16.
  */
 
-public class TypeInTextFieldCommand extends Command{
+public class TypeInTextFieldCommand extends Command {
 
-  private Parameters myParameters;
+    private Parameters myParameters;
 
-  public TypeInTextFieldCommand(Parameters parameters) {
-    myParameters = parameters;
-  }
-
-
-  @Override
-  public void process(final Queue<Command> script) throws Exception {
-    myParameters.log();
-    String textJLabel = myParameters.getTextField();
-    final JTextField jTextField = RobotControlManager.getInstance().getRobotControl().findJTextField(textJLabel);
-    if (jTextField != null) {
-      EdtInvocationManager.getInstance().invokeLater(new Runnable() {
-        @Override
-        public void run() {
-         jTextField.setText(myParameters.getTypedText());
-          EdtInvocationManager.getInstance().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-              try {
-                startNext(script);
-              }
-              catch (Exception e) {
-                e.printStackTrace();
-              }
-            }
-          });
-        }
-      });
-    } else {
-      throw new Exception("Unable to find JTextLabel near JLabel " + textJLabel);
+    public TypeInTextFieldCommand(Parameters parameters) {
+        myParameters = parameters;
     }
-  }
+
+
+    @Override
+    public void process(final Queue<Command> script) throws Exception {
+        myParameters.log();
+        String textJLabel = myParameters.getTextField();
+        final JTextField jTextField = RobotControlManager.getInstance().getRobotControl().findJTextField(textJLabel);
+        if (jTextField != null) {
+            EdtInvocationManager.getInstance().invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    jTextField.setText(myParameters.getTypedText());
+                    try {
+                        startNext(script);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+            throw new Exception("Unable to find JTextLabel near JLabel " + textJLabel);
+        }
+    }
 
 }

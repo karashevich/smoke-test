@@ -1,6 +1,15 @@
 package automation;
 
 import automation.commands.*;
+import automation.commands.navigateAndClick.NavigateAndClickCommand;
+import automation.commands.navigateAndClick.NavigateAndClickMenuCommand;
+import automation.commands.select.SelectInFrameworkListCommand;
+import automation.commands.select.SelectInJdkListCommand;
+import automation.commands.select.SelectInListCommand;
+import automation.commands.wait.WaitCommand;
+import automation.commands.wait.WaitDialogCommand;
+import automation.commands.wait.WaitProjectOpeningCommand;
+import automation.commands.wait.WaitUiCommand;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.util.containers.Queue;
@@ -90,6 +99,9 @@ public class Script extends AnAction {
                     break;
                 case "project-view":
                     command = new ProjectViewCommand(element);
+                    break;
+                case "project-model-check":
+                    command = new CheckProjectViewModelCommand(element);
                     break;
                 case "wait-project-open":
                     command = new WaitProjectOpeningCommand(new Parameters());

@@ -1,6 +1,8 @@
-package automation.commands;
+package automation.commands.wait;
 
 import automation.RobotControlManager;
+import automation.commands.Command;
+import automation.commands.Parameters;
 import com.intellij.util.containers.Queue;
 import com.intellij.util.ui.EdtInvocationManager;
 
@@ -18,14 +20,6 @@ public class WaitProjectOpeningCommand extends Command {
     @Override
     public void process(Queue<Command> script) throws Exception {
         myParameters.log();
-        RobotControlManager.getInstance().getRobotControl().waitProjectOpening(() -> EdtInvocationManager.getInstance().invokeLater(() -> {
-            try {
-                startNext(script);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-                System.exit(1);
-            }
-        }), myParameters.getMyTimeout());
+        RobotControlManager.getInstance().getRobotControl().waitProjectOpening(runNext(script), myParameters.getMyTimeout());
     }
 }

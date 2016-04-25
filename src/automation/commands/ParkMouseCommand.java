@@ -74,23 +74,5 @@ public class ParkMouseCommand extends Command {
 
     }
 
-    @NotNull
-    private Runnable runNext(final Queue<Command> script) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                EdtInvocationManager.getInstance().invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            startNext(script);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-            }
-        };
-    }
 
 }

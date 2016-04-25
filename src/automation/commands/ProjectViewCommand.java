@@ -35,6 +35,7 @@ public class ProjectViewCommand extends Command {
 
     public final static String ELEMENT = "element";
     public final static String ACTION = "action";
+    public final static String ACTION_EXPAND_ALL = "expand-all";
     public final static String ACTION_LEFT_CLICK = "left-click";
     public final static String ACTION_DOUBLE_CLICK = "double-click";
     public final static String ACTION_RIGHT_CLICK = "right-click";
@@ -84,27 +85,13 @@ public class ProjectViewCommand extends Command {
             case ACTION_RIGHT_CLICK:
                 rc.navigateAndRightClick(componentByText, runNext(script));
                 break;
+            case ACTION_EXPAND_ALL:
+
+
         }
 
     }
 
-    @NotNull
-    private Runnable runNext(final Queue<Command> script) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                EdtInvocationManager.getInstance().invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            startNext(script);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-            }
-        };
-    }
+
 
 }

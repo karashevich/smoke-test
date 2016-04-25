@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package automation.commands;
+package automation.commands.navigateAndClick;
 
 import automation.RobotControlManager;
+import automation.commands.Command;
+import automation.commands.Parameters;
 import automation.util.PngUtils;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.ui.customization.CustomActionsSchema;
@@ -173,19 +175,6 @@ public class NavigateAndClickMenuCommand extends Command {
 
     private void nav(Point p, Runnable r, boolean horizontalFirst) throws InterruptedException {
         RobotControlManager.getInstance().getRobotControl().navigateMenu(p, r, horizontalFirst);
-    }
-
-    private Runnable runNext(Queue<Command> script) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    startNext(script);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
     }
 
     private Point getMacMainMenuLocation(String menuName) throws Exception {

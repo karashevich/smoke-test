@@ -1,7 +1,9 @@
-package automation.commands;
+package automation.commands.select;
 
 import automation.RobotControl;
 import automation.RobotControlManager;
+import automation.commands.Command;
+import automation.commands.Parameters;
 import com.intellij.util.containers.Queue;
 
 /**
@@ -18,16 +20,7 @@ public class SelectInListCommand extends Command {
     @Override
     public void process(Queue<Command> script) throws Exception {
         RobotControl rc = RobotControlManager.getInstance().getRobotControl();
-        rc.selectItemFromProjectWizardList(myParameters.getTextField(), new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    startNext(script);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        rc.selectItemFromProjectWizardList(myParameters.getTextField(), runNext(script));
 
     }
 }
