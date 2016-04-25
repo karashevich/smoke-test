@@ -2,7 +2,17 @@
 <root>
     <start/>
     <!--<navigate-and-click-menu param="Tools->WebServices"/>\-->
-    <project-model-check path="src/META-INF/persistence.xml"/>
-    <project-model-check path="lib/javax.persistence.jar!/javax/persistence"/>
-    <print>Expanded</print>
+    <project-model-check path="/src/META-INF/persistence.xml"/>
+    <wait delay="1000"/>
+
+    <project-view element="persistence.xml" action="double-click"/>
+    <wait delay="1000"/>
+
+    <project-model-check path="/lib/javax.persistence.jar!/javax/persistence"/>
+    <wait delay="1000"/>
+
+    <project-view element="javax.persistence" action="double-click"/>
+    <wait delay="1000"/>
+
+    <print>Script finished</print>
 </root>

@@ -32,4 +32,20 @@
 
     <wait delay="1000"/>
     <navigate-and-click param="Java Enterprise"/>
+
+    <wait delay="1000"/>
+
+    <project-model-check path="/src/META-INF/persistence.xml"/>
+    <wait delay="1000"/>
+
+    <project-view element="persistence.xml" action="double-click"/>
+    <wait delay="1000"/>
+
+    <project-model-check path="/lib/javax.persistence.jar!/javax/persistence/Access.class"/>
+    <wait delay="1000"/>
+
+    <project-view element="Access" action="double-click"/>
+    <wait delay="1000"/>
+
+    <print>Script finished</print>
 </root>

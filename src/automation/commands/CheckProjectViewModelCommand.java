@@ -20,6 +20,7 @@ import automation.HierarchyTree;
 import automation.RobotControl;
 import automation.RobotControlManager;
 import com.intellij.ide.projectView.impl.ProjectTreeBuilder;
+import com.intellij.ide.projectView.impl.ProjectViewPane;
 import com.intellij.ide.projectView.impl.ProjectViewTree;
 import com.intellij.ide.projectView.impl.nodes.BasePsiNode;
 import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
@@ -28,6 +29,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.AbstractTreeUi;
 import com.intellij.openapi.util.ActionCallback;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.psi.PsiElement;
@@ -55,7 +57,7 @@ import static automation.GuiUtil.getProjectViewTree;
 public class CheckProjectViewModelCommand extends Command {
 
     public final static String PATH = "path";
-//    public final static String ACTION = "action";
+    //    public final static String ACTION = "action";
 //    public final static String ACTION_LEFT_CLICK = "left-click";
 //    public final static String ACTION_DOUBLE_CLICK = "double-click";
 //    public final static String ACTION_RIGHT_CLICK = "right-click";
@@ -81,79 +83,67 @@ public class CheckProjectViewModelCommand extends Command {
             throw new Exception("SMOKE_TEST: Unable to find attribute 'path' for <project-model-check> command. Please fix your script");
 
         path = attributeElement.getValue();
-//        action = attributeAction.getValue();
     }
 
     @Override
     public void process(final Queue<Command> script) throws Exception {
 
-        //Project View item name
         final Component focusOwner = IdeFocusManager.getGlobalInstance().getFocusOwner();
         final ProjectViewTree projectViewTree = getProjectViewTree(focusOwner);
-        final TreeModel model = projectViewTree.getModel();
-        final TreePath projTreePath = TreeUtil.getFirstLeafNodePath(projectViewTree);
 
-        final DefaultMutableTreeNode child = (DefaultMutableTreeNode) projectViewTree.getModel().getChild(model.getRoot(), 0);
-        final DefaultMutableTreeNode extLibs = (DefaultMutableTreeNode) projectViewTree.getModel().getChild(model.getRoot(), 1);
-        DefaultMutableTreeNode loadingChild = (DefaultMutableTreeNode)child.getFirstChild();
         final AbstractTreeBuilder treeBuilder = ProjectTreeBuilder.getBuilderFor(projectViewTree);
-
-        final SpeedSearchSupply speedSearchSupply = SpeedSearchBase.getSupply(projectViewTree);
+        assert treeBuilder != null;
         final AbstractTreeStructure treeStructure = treeBuilder.getTreeStructure();
         final Object rootElement = treeStructure.getRootElement();
         final Object[] childElements = treeStructure.getChildElements(rootElement);
 
         AbstractTreeNode prj = (AbstractTreeNode) childElements[0];
 
-        treeBuilder.expand(getNodeFromPath(path, prj), runNext(script));
-//        treeBuilder.getTreeStructure().
+        final AbstractTreeNode nodeFromPath = getNodeFromPath(path, prj);
+        final TreePath path = projectViewTree.getPath(nodeFromPath);
+        treeBuilder.expand(nodeFromPath, new Runnable() {
+            @Override
+            public void run() {
+                projectViewTree.scrollPathToVisible(path);
+                try {
+                    startNext(script);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
 
     }
 
     private AbstractTreeNode getNodeFromPath(String path, AbstractTreeNode startNode) throws Exception {
-        final String[] splitted = path.split(SPLIT_SYMBOL);
-        if (splitted.length == 0) throw new Exception("Unable to split path: " + path);
-        if (splitted.length == 1) {
-//            final AbstractTreeNode[] nodes = (AbstractTreeNode[]) startNode.getChildren().toArray();
-//            for (AbstractTreeNode node : nodes) {
-            final Object[] nodes = startNode.getChildren().toArray();
-            for (Object xnode : nodes) {
-                if (!(xnode instanceof AbstractTreeNode))
-                    throw new Exception("Object cannot be cast to AbstractTreeNode");
-                AbstractTreeNode node = (AbstractTreeNode) xnode;
-                if (node.getElement() instanceof BasePsiNode) {
-                    final VirtualFile virtualFile = ((BasePsiNode) node.getElement()).getVirtualFile();
-                    assert virtualFile != null;
-                    if (virtualFile.getName().equals(path)) {
-                        node.setParent(startNode);
-                        return node;
-                    }
-                } else {
-                    throw new Exception("Unable to cast node to BasePsiNode");
+        final Object[] nodes = startNode.getChildren().toArray();
+        for (Object xnode : nodes) {
+            if (!(xnode instanceof AbstractTreeNode))
+                throw new Exception("Object cannot be cast to AbstractTreeNode");
+            AbstractTreeNode node = (AbstractTreeNode) xnode;
+            if (node.getElement() instanceof BasePsiNode) {
+                final VirtualFile childVF = ((BasePsiNode) node.getElement()).getVirtualFile();
+                assert childVF != null;
+                final VirtualFile parentVF = ((BasePsiNode) startNode).getVirtualFile();
+                assert parentVF != null;
+                final String parentPath = parentVF.getPath();
+                final String childPath = childVF.getPath();
+                final String diff = StringUtil.substringAfter(childPath, parentPath);
+                assert diff != null;
+                if (StringUtil.startsWith(path, diff)) {
+                    node.setParent(startNode);
+                    path = StringUtil.substringAfter(path, diff);
+                    assert path != null;
+                    if (path.isEmpty()) return node;
+                    else return getNodeFromPath(path, node);
                 }
-            }
-            throw new Exception("Unable to find such AbstractTreeNode by name: " + path );
-        } else {
-            String startname = splitted[0];
-            String newpath = path.substring(startname.length() + SPLIT_SYMBOL.length());
-            final Object[] nodes = startNode.getChildren().toArray();
-            for (Object xnode : nodes) {
-                if (!(xnode instanceof AbstractTreeNode))
-                    throw new Exception("Object cannot be cast to AbstractTreeNode");
-                AbstractTreeNode node = (AbstractTreeNode) xnode;
-                if (node.getElement() instanceof BasePsiNode) {
-                    final VirtualFile virtualFile = ((BasePsiNode) node.getElement()).getVirtualFile();
-                    assert virtualFile != null;
-                    if (virtualFile.getName().equals(startname)) {
-                        node.setParent(startNode);
-                        return getNodeFromPath(newpath, node);
-                    }
-                } else {
-                    throw new Exception("Unable to cast node to BasePsiNode");
-                }
+            } else {
+                throw new Exception("Unable to cast node to BasePsiNode");
             }
         }
-        throw new Exception("Unable to find such AbstractTreeNode by name:" + path);
+        throw new Exception("Unable to find such AbstractTreeNode by name: " + path);
     }
 
 }
