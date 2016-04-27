@@ -11,6 +11,7 @@
     <navigate-and-click param="New..." />
     <select-in-JDK-list param="JDK" />
     <wait-dialog-command param="Select Home Directory for JDK"/>
+    <wait delay="4000"/>
     <type-text-in-text-field type-text="/usr/lib/jvm/java-8-oracle"/>
     <wait delay="2000"/>
     <navigate-and-click param="OK" />
