@@ -82,10 +82,9 @@ public class ScriptProcessor {
     final DataContext dataContext = DataManager.getInstance().getDataContext(IdeFocusManager.getGlobalInstance().getFocusOwner());
     AnActionEvent e = AnActionEvent.createFromDataContext(ActionPlaces.WELCOME_SCREEN, null, dataContext);
 
-    (new UpdateScripts()).actionPerformed(e);
-    final AnAction scriptAction = ActionManager.getInstance().getAction("automate.start2");
-
-    scriptAction.actionPerformed(e);
+//    (new UpdateScripts()).actionPerformed(e);
+    Script start2 = new Script("start2", mapping);
+    start2.actionPerformed(e);
 
 
   }

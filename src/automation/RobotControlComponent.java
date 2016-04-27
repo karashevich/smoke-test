@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 public class RobotControlComponent implements ApplicationComponent {
     @Override
     public void initComponent() {
-        (new UiInspectorAction()).setSelected(null, true);
+//        (new UiInspectorAction()).setSelected(null, true);
         RobotControlManager.getInstance().getRobotControl().startRobotActivity();
         try {
             RobotControlManager.getInstance().getRobotControl().runInRobotThreadWhenWelcomeScreenIsShown(() ->
