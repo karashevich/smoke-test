@@ -3,9 +3,20 @@
     <start/>
     <navigate-and-click param="Create New Project" />
     <wait-dialog-command param="New Project"/>
-    <select-in-list param="Java" />
-    <select-framework param="facet:jpa"/>
 
+    <!--SELECT PROJECT TYPE-->
+    <select-in-list param="Java" />
+
+    <!--SELECT JDK-->
+    <navigate-and-click param="New..." />
+    <select-in-JDK-list param="JDK" />
+    <wait-dialog-command param="Select Home Directory for JDK"/>
+    <type-text-in-text-field type-text="/usr/lib/jvm/java-8-oracle"/>
+    <wait delay="2000"/>
+    <navigate-and-click param="OK" />
+
+    <!--SELECT FRAMEWORK-->
+    <select-framework param="facet:jpa"/>
     <wait delay="500"/>
     <navigate-and-click param="Next" />
 
@@ -28,6 +39,9 @@
     <park-mouse position="center"/>
 
     <wait delay="1000"/>
+    <navigate-and-click param="Got it!"/>
+
+    <wait delay="1000"/>
     <navigate-and-click param="Persistence"/>
 
     <wait delay="1000"/>
@@ -46,6 +60,9 @@
 
     <project-view element="Access" action="double-click"/>
     <wait delay="1000"/>
+
+    <wait-ui param="Accept"/>
+    <navigate-and-click param="Accept"/>
 
     <print>Script finished</print>
 </root>

@@ -15,7 +15,6 @@
  */
 package automation;
 
-import a.b.T;
 import com.intellij.ide.navigationToolbar.NavBarItem;
 import com.intellij.ide.projectView.impl.ProjectViewPane;
 import com.intellij.ide.projectView.impl.ProjectViewTree;
