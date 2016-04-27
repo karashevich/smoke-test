@@ -20,7 +20,10 @@ public class UpdateScripts extends AnAction{
     @Override
     public void actionPerformed(AnActionEvent e) {
         URL resource = this.getClass().getClassLoader().getResource("/automation/scripts");
+        System.out.println("resource: " + resource);
+        assert resource != null;
         File file = new File(resource.getFile());
+        System.out.println("file: " + file);
         for (String name : file.list()) {
             if (name.substring(name.length() - 4, name.length()).equals(".xml")) {
                 try {
