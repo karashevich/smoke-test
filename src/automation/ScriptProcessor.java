@@ -15,7 +15,11 @@
  */
 package automation;
 
+import automation.actions.UpdateScripts;
 import automation.commands.*;
+import com.intellij.ide.DataManager;
+import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.wm.IdeFocusManager;
 import com.intellij.util.containers.Queue;
 
 import java.text.SimpleDateFormat;
@@ -63,9 +67,6 @@ public class ScriptProcessor {
 //    }));
 //    script.pullFirst().process(script);
 
-//    Script script = new Script("start", mapping);
-//    script.process();
-
 //    Component target = IdeFocusManager.getGlobalInstance().getFocusOwner();
 //    JRootPane rootPane = target == null ? null : SwingUtilities.getRootPane(target);
 //    JComponent glassPane = rootPane == null ? null : (JComponent)rootPane.getGlassPane();
@@ -77,6 +78,16 @@ public class ScriptProcessor {
 //        e.consume();
 //      }
 //    });
+
+    final DataContext dataContext = DataManager.getInstance().getDataContext(IdeFocusManager.getGlobalInstance().getFocusOwner());
+    AnActionEvent e = AnActionEvent.createFromDataContext(ActionPlaces.WELCOME_SCREEN, null, dataContext);
+
+    (new UpdateScripts()).actionPerformed(e);
+    final AnAction scriptAction = ActionManager.getInstance().getAction("automate.start2");
+
+    scriptAction.actionPerformed(e);
+
+
   }
 
 

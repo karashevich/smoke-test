@@ -25,7 +25,7 @@ public class UpdateScripts extends AnAction{
             if (name.substring(name.length() - 4, name.length()).equals(".xml")) {
                 try {
                     String nameWithoutExtension = name.substring(0, name.length() - 4);
-                    String genId = "automate" + nameWithoutExtension;
+                    String genId = "automate." + nameWithoutExtension;
                     AnAction script = new Script(nameWithoutExtension, RobotControlManager.getInstance().getMapping());
                     if (ActionManager.getInstance().getAction(genId) != null)
                         ActionManager.getInstance().unregisterAction(genId);
