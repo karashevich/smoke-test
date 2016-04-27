@@ -32,6 +32,7 @@ import java.util.Map;
  */
 public class Script extends AnAction {
 
+    private static final String AUTOMATION_SCRIPTS_DIR = "/automation/scripts/";
     private String name;
     private Document doc;
     private Queue<Command> queueOfCommands;
@@ -43,10 +44,7 @@ public class Script extends AnAction {
         this.name = name;
         this.mapping = mapping;
 
-        URL resource = this.getClass().getClassLoader().getResource("/automation/scripts/");
-        File file1 = new File(resource.getFile() + name + ".xml");
-        InputStream inputStream = new FileInputStream(file1);
-
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(AUTOMATION_SCRIPTS_DIR + name + ".xml");
         SAXBuilder builder = new SAXBuilder();
         doc = builder.build(inputStream);
 
