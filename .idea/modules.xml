@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/smoke-test.iml" filepath="$PROJECT_DIR$/smoke-test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/smoke-test.iml" filepath="$PROJECT_DIR$/.idea/modules/smoke-test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/smoke-test_main.iml" filepath="$PROJECT_DIR$/.idea/modules/smoke-test_main.iml" group="smoke-test" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/smoke-test_test.iml" filepath="$PROJECT_DIR$/.idea/modules/smoke-test_test.iml" group="smoke-test" />
     </modules>
   </component>
 </project>
